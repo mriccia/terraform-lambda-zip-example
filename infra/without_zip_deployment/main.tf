@@ -27,25 +27,13 @@ data "archive_file" "python_lambda_package" {
   output_path = local.zipfile_name
 }
 
-
-resource "aws_s3_bucket" "validationfiles-bucket" {
-  bucket = local.bucket_name
-}
-
-# Deploy ZIP file to S3
-resource "aws_s3_object" "s3_lambda_package" {
-  bucket = aws_s3_bucket.validationfiles-bucket.bucket
-  key    = local.zipfile_name
-  source = data.archive_file.python_lambda_package.output_path
-}
-
 # Create the Lambda function definition
 resource "aws_lambda_function" "helloworldFunction" {
 
   function_name = "helloworldFunction"
 
-  s3_bucket = aws_s3_object.s3_lambda_package.bucket
-  s3_key = aws_s3_object.s3_lambda_package.key
+  filename = data.archive_file.python_lambda_package.source_content_filename
+
   handler = "app.lambda_handler"
   runtime = "python3.11"
 
