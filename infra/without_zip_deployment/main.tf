@@ -32,7 +32,7 @@ resource "aws_lambda_function" "helloworldFunction" {
 
   function_name = "helloworldFunction"
 
-  filename = data.archive_file.python_lambda_package.source_content_filename
+  filename = "helloworldlambda.zip"
 
   handler = "app.lambda_handler"
   runtime = "python3.11"
